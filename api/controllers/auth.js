@@ -1,10 +1,10 @@
-const mongoose = require("mongoose");
 const { body, validationResult } = require("express-validator");
 const User = require("../models/user");
 const { hashPassword, comparePasswords } = require("../helpers/passwords");
 const RequestValidationError = require("../errors/request-validation-error");
 const ExistingUser = require("../errors/existing-user");
 const SignInError = require("../errors/sign-in-error");
+const NotExistingError = require("../errors/not-exist-error");
 
 //validators
 const signupValidator = [
@@ -21,7 +21,7 @@ const signup = async (req, res, next) => {
     if (!errors.isEmpty()) {
         next(new RequestValidationError(errors.array()));
     }
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
 
     const exisitingUser = await User.findOne({ email: email });
 
@@ -36,10 +36,15 @@ const signup = async (req, res, next) => {
         password: newPass,
     });
 
+    if (role !== undefined) {
+        newUser.role = role;
+    }
+
     const user = await newUser.save();
 
     //store user's role and id in cookie
     req.session.userId = user._id;
+    req.session.role = user.role;
 
     console.log("req session: ", req.session);
     res.status(200).json({
@@ -63,13 +68,15 @@ const signin = async (req, res, next) => {
         next(new SignInError());
     }
 
-    //verify pass
+    //verify password
     const validPassword = await comparePasswords(user.password, password);
     if (!validPassword) {
         next(new SignInError());
     }
 
+    //store user info in session
     req.session.userId = user._id;
+    req.session.role = user.role;
 
     res.status(401).json({
         user: user,
@@ -77,4 +84,32 @@ const signin = async (req, res, next) => {
     });
 };
 
-module.exports = { signup, signout, signin, signupValidator };
+//add db error
+const getAllUsers = async (req, res) => {
+    const users = await User.find();
+    console.log("cookies: ", req.session);
+    res.status(200).json(users);
+};
+
+const getUserInfo = async (req, res, next) => {
+    const userId = req.params.id;
+
+    const userProfile = await User.findOne({ _id: userId });
+
+    if (!userProfile) {
+        next(new NotExistingError("This user doesn't exist"));
+    }
+    const case1 = userProfile._id === req.session.id;
+    const case2 = req.session.role === "ADMIN";
+
+    if (case1 || case2) res.status(200).json(userProfile);
+};
+
+module.exports = {
+    signup,
+    signout,
+    signin,
+    signupValidator,
+    getAllUsers,
+    getUserInfo,
+};
