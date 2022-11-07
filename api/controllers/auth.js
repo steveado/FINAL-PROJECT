@@ -78,7 +78,7 @@ const signin = async (req, res, next) => {
     req.session.userId = user._id;
     req.session.role = user.role;
 
-    res.status(401).json({
+    res.status(200).json({
         user: user,
         status: true,
     });
