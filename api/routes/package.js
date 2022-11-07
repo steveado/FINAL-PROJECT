@@ -1,5 +1,9 @@
 const express = require("express");
-const { createPackage, getAllPackages } = require("../controllers/package");
+const {
+    createPackage,
+    getAllPackages,
+    getPackageInfo,
+} = require("../controllers/package");
 const { authRequest } = require("../middlewares/auth-request");
 const { permissions } = require("../constants");
 
@@ -13,5 +17,8 @@ route.post(
 );
 
 route.get("/all", authRequest(permissions.COURIER_ADMIN), getAllPackages);
+
+//add permissions later
+route.get("/:id", getPackageInfo);
 
 module.exports = route;
