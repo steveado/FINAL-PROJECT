@@ -15,6 +15,12 @@ const errorHandler = (err, req, res, next) => {
         res.status(err.statusCode).json({
             errors: err.serializeErrors(),
         });
+    } else {
+        res.status(500).json([
+            {
+                message: err.message,
+            },
+        ]);
     }
 };
 
