@@ -2,17 +2,32 @@ const NotExistingError = require("../errors/not-exist-error");
 const UnauthorizedError = require("../errors/unauthorized-error");
 
 const Package = require("../models/package");
+const User = require("../models/user");
 
-const createPackage = async (req, res) => {
+const createPackage = async (req, res, next) => {
     const { pickupPoint, destination, weight, description } = req.body;
     const newPackage = new Package({
+        createdBy: req.session.userId,
         pickupPoint,
         destination,
         weight,
         description,
     });
-    const package = await newPackage.save();
-    res.status(200).json(package);
+
+    //make sure to create custom error for this
+    try {
+        const package = await newPackage.save();
+        const user = await User.findOne({ _id: newPackage.createdBy });
+
+        if (user) {
+            user.packages.push(package);
+            await user.save();
+        }
+
+        res.status(200).json(package);
+    } catch (error) {
+        next(error);
+    }
 };
 
 const getAllPackages = async (req, res) => {

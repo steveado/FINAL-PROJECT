@@ -18,6 +18,12 @@ const userSchema = mongoose.Schema({
         type: String,
         default: "USER",
     },
+    packages: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Package",
+        },
+    ],
 });
 
 module.exports = mongoose.model("User", userSchema);

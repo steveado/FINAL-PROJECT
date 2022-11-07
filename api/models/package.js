@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
+const { Schema } = require("mongoose");
 
 const productSchema = mongoose.Schema({
+    createdBy: String,
     pickupPoint: {
         type: String,
         required: true,
@@ -25,4 +27,4 @@ const productSchema = mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model("Product", productSchema);
+module.exports = mongoose.model("Package", productSchema);
