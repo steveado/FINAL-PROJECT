@@ -99,7 +99,7 @@ const getUserInfo = async (req, res, next) => {
     if (!userProfile) {
         next(new NotExistingError("This user doesn't exist"));
     }
-    const case1 = userProfile._id === req.session.id;
+    const case1 = userProfile._id === req.session.userId;
     const case2 = req.session.role === "ADMIN";
 
     if (case1 || case2) res.status(200).json(userProfile);
