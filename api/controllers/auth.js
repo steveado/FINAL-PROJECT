@@ -46,8 +46,8 @@ const signup = async (req, res, next) => {
     req.session.userId = user._id;
     req.session.role = user.role;
 
-    console.log("req session: ", req.session);
-    res.status(200).json({
+    //send status as well (fix error)
+    res.json({
         user: user,
         status: true,
     });
@@ -86,15 +86,16 @@ const signin = async (req, res, next) => {
 
 //add db error
 const getAllUsers = async (req, res) => {
-    const users = await User.find();
-    console.log("cookies: ", req.session);
+    const users = await User.find().populate("packages");
     res.status(200).json(users);
 };
 
 const getUserInfo = async (req, res, next) => {
     const userId = req.params.id;
 
-    const userProfile = await User.findOne({ _id: userId });
+    const userProfile = await User.findOne({ _id: userId }).populate(
+        "packages"
+    );
 
     if (!userProfile) {
         next(new NotExistingError("This user doesn't exist"));
