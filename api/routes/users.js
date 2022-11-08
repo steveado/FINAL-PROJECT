@@ -1,5 +1,5 @@
 const express = require("express");
-const permissions = require("../constants");
+const { permissions } = require("../constants");
 const { authRequest } = require("../middlewares/auth-request");
 const {
     signup,
@@ -22,7 +22,8 @@ route.get("/", (req, res) => {
 route.get("/signout", signout);
 route.post("/signin", signin);
 route.post("/create", signupValidator, signup);
-route.get("/:id", authRequest(permissions.MUST_BE_SIGNED_IN), getUserInfo);
 route.get("/all", authRequest(permissions.ADMIN), getAllUsers);
+
+route.get("/:id", authRequest(permissions.MUST_BE_SIGNED_IN), getUserInfo);
 
 module.exports = route;
