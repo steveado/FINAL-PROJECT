@@ -4,6 +4,8 @@ const UnauthorizedError = require("../errors/unauthorized-error");
 const Package = require("../models/package");
 const User = require("../models/user");
 
+// /api/package
+
 const createPackage = async (req, res, next) => {
     const { pickupPoint, destination, weight, description } = req.body;
     const newPackage = new Package({
