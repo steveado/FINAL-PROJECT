@@ -1,2 +1,5 @@
-problem: how to update the session of an already signed in user after thier role has been updated
-  1. remove roles from session only id, and query db for user role each time a request is updated ?
+1. problem: how to update the session of an already signed in user after thier role has been updated remove roles from session only id, and query db for user role each time a request is updated ?
+2. design ratings feature with comments
+3. design email notification for fulfilled orders
+4. add edit and delete features for all models
+5. design quotes feature
