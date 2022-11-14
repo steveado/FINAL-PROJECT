@@ -4,6 +4,8 @@ const cookieSession = require("cookie-session");
 
 const usersRoute = require("./routes/users");
 const packageRoute = require("./routes/package");
+const applicationRoute = require("./routes/application");
+
 const errorHandler = require("./middlewares/error-handler");
 
 const app = express();
@@ -17,6 +19,8 @@ app.use(
 
 app.use("/api/user", usersRoute);
 app.use("/api/package", packageRoute);
+app.use("/api/application", applicationRoute);
+
 app.use(errorHandler);
 
 mongoose
