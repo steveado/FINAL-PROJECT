@@ -1,0 +1,2 @@
+problem: how to update the session of an already signed in user after thier role has been updated
+  1. remove roles from session only id, and query db for user role each time a request is updated ?
