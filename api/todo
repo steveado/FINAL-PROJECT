@@ -3,3 +3,4 @@
 3. design email notification for fulfilled orders
 4. add edit and delete features for all models
 5. design quotes feature
+6. Add fulfilled by and assignedCourier field to package db
