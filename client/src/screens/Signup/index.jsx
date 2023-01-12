@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Button from "../../components/UI/Button";
 import TextInput from "../../components/UI/TextInput";
+import axios from "axios";
 
 const Signup = () => {
   const [signupData, setSignupData] = useState({
@@ -19,8 +20,21 @@ const Signup = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    const { email, password } = signupData;
     console.log("state: ", signupData);
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/user/create",
+        {
+          email,
+          password,
+        }
+      );
+      console.log("response: ", response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
