@@ -39,6 +39,7 @@ const Signup = () => {
 
   return (
     <div className="">
+      <p className="text-2xl font-bold text-center pb-5">Sign up</p>
       <form action="" className="space-y-2 text-center mx-3">
         <TextInput
           name="fullName"

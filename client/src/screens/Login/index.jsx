@@ -1,26 +1,60 @@
-import React from "react";
+import React, { useState } from "react";
+import TextInput from "../../components/UI/TextInput";
+import Button from "../../components/UI/Button";
+import { API_URL } from "../../apiConfig";
 
 const Login = () => {
+  const [loginData, setLoginData] = useState({
+    "email": "",
+    "password": "",
+  });
+
+  const handleChange = (e) => {
+    e.preventDefault();
+
+    setLoginData({
+      ...loginData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const { email, password } = loginData;
+    try {
+      const response = await API_URL.post("user/signin", { email, password });
+      console.log("testing: ", response);
+    } catch (error) {
+      console.log("error :", error);
+    }
+  };
+
   return (
-    <form className="bg-white p-6 rounded-lg md:flex md:flex-wrap">
-      <label className="block font-medium mb-2 w-full md:w-1/2 md:pr-2">
-        Email
-        <input
-          type="email"
-          className="form-input rounded-lg mt-1 block w-full"
+    <div className="">
+      <p className="text-2xl font-bold text-center pb-5">Login</p>
+      <form action="" className="space-y-2 text-center mx-3">
+        <TextInput
+          name="email"
+          placeholder="Email"
+          value={loginData.email}
+          onChange={(e) => {
+            handleChange(e);
+          }}
         />
-      </label>
-      <label className="block font-medium mb-2 w-full md:w-1/2 md:pl-2">
-        Password
-        <input
-          type="password"
-          className="form-input rounded-lg mt-1 block w-full"
+        <TextInput
+          name="password"
+          placeholder="Password"
+          value={loginData.password}
+          onChange={(e) => {
+            handleChange(e);
+          }}
         />
-      </label>
-      <button className="bg-indigo-500 text-white rounded-lg py-2 px-4 hover:bg-indigo-600 w-full md:w-auto md:text-center">
-        Submit
-      </button>
-    </form>
+        <Button className="btn btnPrimary" onClick={(e) => handleSubmit(e)}>
+          Login
+        </Button>
+      </form>
+    </div>
   );
 };
 
